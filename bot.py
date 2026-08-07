@@ -74,25 +74,21 @@ def get_spreadsheet():
 def get_sheet(name, headers):
     spreadsheet = get_spreadsheet()
 
-    try:
-        sheet = spreadsheet.worksheet(name)
-    except gspread.WorksheetNotFound:
-        existing_sheets = spreadsheet.worksheets()
-        sheet = next(
-            (ws for ws in existing_sheets if ws.title == name),
-            None
-        )
+    sheets = spreadsheet.worksheets()
 
-        if sheet is None:
-            sheet = spreadsheet.add_worksheet(
-                title=name,
-                rows=1000,
-                cols=len(headers),
-            )
+    for sheet in sheets:
+        if sheet.title == name:
+            if not sheet.row_values(1):
+                sheet.append_row(headers)
+            return sheet
 
-    if not sheet.row_values(1):
-        sheet.append_row(headers)
+    sheet = spreadsheet.add_worksheet(
+        title=name,
+        rows=1000,
+        cols=len(headers),
+    )
 
+    sheet.append_row(headers)
     return sheet
 
 def init_sheets():
