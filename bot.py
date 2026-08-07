@@ -68,7 +68,7 @@ def get_google_client():
 
 def get_spreadsheet():
     client = get_google_client()
-    return client.open(SHEET_NAME)
+    return client.open_by_key("1q8d8sTAlxojrzKFHdzyayhGDaoZlzg6NhfJIabiW9ZY")
 
 
 def get_sheet(name, headers):
