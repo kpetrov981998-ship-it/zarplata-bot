@@ -1243,6 +1243,31 @@ async def main():
 
     await dp.start_polling(bot)
 
+async def health(request):
+    return web.Response(text="OK")
+
+
+async def start_web_server():
+    app = web.Application()
+    app.router.add_get("/", health)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+
+    port = int(os.getenv("PORT", "10000"))
+
+    site = web.TCPSite(
+        runner,
+        "0.0.0.0",
+        port,
+    )
+
+    await site.start()
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    async def run():
+        await start_web_server()
+        await main()
+
+    asyncio.run(run())
