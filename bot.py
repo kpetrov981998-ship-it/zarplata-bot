@@ -73,22 +73,11 @@ def get_spreadsheet():
 
 def get_sheet(name, headers):
     spreadsheet = get_spreadsheet()
+    sheet = spreadsheet.worksheet(name)
 
-    sheets = spreadsheet.worksheets()
+    if not sheet.row_values(1):
+        sheet.append_row(headers)
 
-    for sheet in sheets:
-        if sheet.title == name:
-            if not sheet.row_values(1):
-                sheet.append_row(headers)
-            return sheet
-
-    sheet = spreadsheet.add_worksheet(
-        title=name,
-        rows=1000,
-        cols=len(headers),
-    )
-
-    sheet.append_row(headers)
     return sheet
 
 def init_sheets():
