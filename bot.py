@@ -73,12 +73,17 @@ def get_spreadsheet():
 
 def get_sheet(name, headers):
     spreadsheet = get_spreadsheet()
-    sheet = spreadsheet.worksheet(name)
 
-    if not sheet.row_values(1):
-        sheet.append_row(headers)
+    for sheet in spreadsheet.worksheets():
+        if sheet.title.strip() == name.strip():
+            if not sheet.row_values(1):
+                sheet.append_row(headers)
+            return sheet
 
-    return sheet
+    raise RuntimeError(
+        f'Не найдена вкладка "{name}". '
+        f'Доступные вкладки: {[s.title for s in spreadsheet.worksheets()]}'
+    )
 
 def init_sheets():
     get_sheet(
